@@ -29,10 +29,10 @@ export default {
     return {
       blocks: [],
       selected: null,
-      search: "force",
+      search: "",
       settings: {
         strokeColor: "#19B5FF",
-        width: 960,
+        width: 1200,
         height: 300
       }
     }
@@ -44,7 +44,7 @@ export default {
     // once we have the CSV loaded, the "root" will be calculated
     root() {
       if (!this.blocks.length) return
-      const stratify = d3.stratify().id(d => d.blockId).parentId(d => d.parentId)
+      const stratify = d3.stratify().id(d => d.slot).parentId(d => d.parent)
 
       // attach the tree to the Vue data object
       return this.tree(stratify(this.blocks));
@@ -66,17 +66,19 @@ export default {
           r: 5,
           className: "node" +
             (d.children ? " node--internal" : " node--leaf"),
-          text: d.id.substring(0, 4) + '...',
+          text: d.id,
           highlight: d.id.toLowerCase().indexOf(this.search.toLowerCase()) != -1 && this.search != "",
           style: {
             transform: "translate(" + d.y + "px," + d.x + "px)"
           },
           textpos: {
-            x: d.children ? -8 : 8,
-            y: 3
+            // x: d.children ? -8 : 8,
+            x: 0,
+            y: -15
           },
           textStyle: {
-            textAnchor: d.children ? "end" : "start"
+            textAnchor: "middle"
+            // textAnchor: d.children ? "end" : "start"
           }
         }
       })
